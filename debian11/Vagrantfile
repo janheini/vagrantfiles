@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<-SCRIPT
+apt update && apt full-upgrade -y
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bullseye64"
+  config.vm.allow_fstab_modification = false
+  config.vm.allow_hosts_modification = false
+
+  # debian tries to use nfs
+  config.vm.allowed_synced_folder_types = [ 'rsync' ]
+  config.vm.synced_folder "./", "/vagrant", type: "rsync"
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+    libvirt.qemu_use_session = false
+  end
+
+  config.vm.provision "shell", inline: $script
+end

@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<-SCRIPT
+dnf update -y
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "almalinux/9"
+  config.vm.allow_fstab_modification = false
+  config.vm.allow_hosts_modification = false
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+    libvirt.qemu_use_session = false
+  end
+
+  config.vm.provision "shell", inline: $script
+end
